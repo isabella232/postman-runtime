@@ -48,4 +48,26 @@ httpServer.on('/custom-reason', function (req, res) {
     res.end();
 });
 
+httpServer.on('/file-upload', function (req, res) {
+    if (req.method === 'POST') {
+        var body = '';
+
+        req.on('data', function (data) {
+            body += data;
+        });
+
+        req.on('end', function () {
+            try {
+                res.setHeader('content-length', String(body.length));
+                res.end();
+            }
+            catch (err) {
+                res.writeHead(500, {'Content-Type': 'text/plain'});
+                res.write('Bad post data request.');
+                res.end();
+            }
+        });
+    }
+});
+
 module.exports = httpServer;
